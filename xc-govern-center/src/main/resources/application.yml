@@ -1,0 +1,16 @@
+server:
+  port: ${PORT:8090}                                               # 服务端口号
+spring:
+  application:
+    name: xc-govern-server                                          # 服务名称
+eureka:
+  client:
+    register-with-eureka: true                                      # 是否注册自己
+    fetch-registry: true                                            # 是否发现自己
+    service-url:
+      defaultZone: http://47.101.34.81:8090   # eureka客户端与eureka服务端的交互地址
+  server:
+    enable-self-preservation: false                                 # 是否开启自我保护
+    eviction-interval-timer-in-ms: 60000                            # 服务注册表的清理间隔 单位：毫秒
+  instance:
+    hostname: ${EUREKA_DOMAIN:eureka01}                             # 主机名

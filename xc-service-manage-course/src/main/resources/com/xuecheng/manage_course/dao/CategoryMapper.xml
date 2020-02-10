@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xuecheng.manage_course.dao.CategoryMapper">
+
+    <resultMap id="CategoryNodeMap" type="com.xuecheng.framework.domain.course.ext.CategoryNode">
+        <id property="id" column="oneId" />
+        <result property="name" column="oneName"/>
+        <result property="label" column="oneLable"/>
+        <collection property="children" ofType="com.xuecheng.framework.domain.course.ext.CategoryNode">
+            <id property="id" column="twoId"/>
+            <result property="name" column="twoName"/>
+            <result property="label" column="twoLable"/>
+            <collection property="children" ofType="com.xuecheng.framework.domain.course.ext.CategoryNode">
+                <id property="id" column="threeId"/>
+                <result property="name" column="threeName"/>
+                <result property="label" column="threeLable"/>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <select id="findCategoryNodes" resultMap="CategoryNodeMap">
+        SELECT
+               a.id AS oneId,
+               a. NAME AS oneName,
+               a.label AS oneLable,
+               b.id AS twoId,
+               b. NAME AS twoName,
+               b.label AS twoLable,
+               c.id AS threeId,
+               c. NAME AS threeName,
+               c.label AS threeLable
+        FROM
+             category a
+                 LEFT JOIN category b ON a.id = b.parentid
+                 LEFT JOIN category c ON b.id = c.parentid
+        WHERE
+                a.isshow = '1'
+          AND a.parentid = '0'
+        ORDER BY
+                 a.isleaf,
+                 b.isleaf
+    </select>
+</mapper>

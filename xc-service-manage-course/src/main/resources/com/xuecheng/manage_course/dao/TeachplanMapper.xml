@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xuecheng.manage_course.dao.TeachplanMapper">
+
+    <resultMap id="teachplanMap" type="com.xuecheng.framework.domain.course.ext.TeachplanNode">
+        <id property="id" column="one_id"/>
+        <result property="pname" column="one_pname"/>
+        <collection property="children" ofType="com.xuecheng.framework.domain.course.ext.TeachplanNode">
+            <id property="id" column="two_id"/>
+            <result property="pname" column="two_pname"/>
+            <collection property="children" ofType="com.xuecheng.framework.domain.course.ext.TeachplanNode">
+                <id property="id" column="three_id"/>
+                <result property="pname" column="three_pname"/>
+                <result property="mediaId" column="mediaId"/>
+                <result property="mediaFileOriginalName" column="mediaFileOriginalName"/>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <select id="findTeachplanList" parameterType="java.lang.String" resultMap="teachplanMap">
+        SELECT a.id    AS one_id,
+               a.pname AS one_pname,
+               b.id    AS two_id,
+               b.pname AS two_pname,
+               c.id    AS three_id,
+               c.pname AS three_pname,
+               media.media_id AS mediaId,
+               media.media_fileoriginalname AS mediaFileOriginalName
+        FROM teachplan a
+                 LEFT JOIN teachplan b ON b.parentid = a.id
+                 LEFT JOIN teachplan c ON c.parentid = b.id
+                 LEFT JOIN teachplan_media media ON c.id = media.teachplan_id
+        WHERE a.parentid = '0'
+#         _parameter 是mybatis的内置参数  表示传入的参数
+        <if test="_parameter!=null and _parameter!=''">
+            and a.courseid=#{courseId}
+        </if>
+        ORDER BY a.orderby,
+                 b.orderby,
+                 c.orderby;
+    </select>
+</mapper>

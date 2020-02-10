@@ -1,0 +1,21 @@
+server:
+  port: 31000
+spring:
+  application:
+    name: xc-service-manage-cms-client
+  data:
+    mongodb:
+      uri: mongodb://47.101.34.81:27017
+      database: xc_cms2
+  rabbitmq:
+    host: 47.101.34.81
+    port: 5672
+    username: admin
+    password: admin
+    virtual-host: /
+xuecheng:
+  mq:
+    queue1: queue_cms_postpage_01
+    routingKey1: 5a751fab6abb5044e0d19ea1  # 门户站点的id
+    queue2: queue_cms_postpage_02
+    routingKey2: 5ce8fec795bf85420409eba3   # 页面详情的id
